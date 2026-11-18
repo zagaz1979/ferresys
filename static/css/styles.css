@@ -148,3 +148,99 @@ tr:hover td { background: #f8fafc; }
 .tabla-venta .inp-cantidad { width: 80px; }
 .precio-unit, .subtotal { text-align: right; }
 #total-venta { font-size: 1.1rem; }
+
+/* =========================================
+   BARRA DE HERRAMIENTAS (Búsqueda, Exportar, Imprimir)
+   ========================================= */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.search-bar {
+    position: relative;
+    flex: 1;
+    max-width: 400px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 0.6rem 1rem 0.6rem 2.4rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.search-bar input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.search-bar::before {
+    content: "🔍";
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.9rem;
+    opacity: 0.6;
+}
+
+.toolbar-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-success { background: #16a34a; color: #fff; border-color: #16a34a; }
+.btn-success:hover { background: #15803d; }
+.btn-secondary { background: #64748b; color: #fff; border-color: #64748b; }
+.btn-secondary:hover { background: #475569; }
+
+/* =========================================
+   PAGINACIÓN
+   ========================================= */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.pagination a, .pagination span {
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    border: 1px solid #cbd5e1;
+    background: #fff;
+    color: #2c3e50;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.pagination a:hover { background: #f1f5f9; }
+.pagination .active { background: #2563eb; color: #fff; border-color: #2563eb; font-weight: bold; }
+.pagination .disabled { color: #94a3b8; background: #f8fafc; pointer-events: none; }
+
+/* =========================================
+   REGLAS DE IMPRESIÓN
+   ========================================= */
+@media print {
+    .topbar, .footer, .toolbar, .page-header, .pagination, .acciones, .btn {
+        display: none !important;
+    }
+    body { background: #fff; color: #000; margin: 0; padding: 0; }
+    .container { max-width: 100%; margin: 0; padding: 0; }
+    table { box-shadow: none; border: 1px solid #000; }
+    th, td { border: 1px solid #000; padding: 0.5rem; }
+    th { background: #f0f0f0 !important; color: #000; }
+    .stock-bajo { background: transparent !important; color: #000; font-weight: bold; }
+    /* Título para impresión */
+    h1::after { content: " (Reporte Impreso)"; font-size: 1rem; color: #555; }
+}
