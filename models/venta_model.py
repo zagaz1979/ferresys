@@ -77,7 +77,9 @@ class VentaModel:
                     sql += " WHERE c.nombre LIKE %s OR CAST(v.id_venta AS CHAR) LIKE %s"
                     term = f"%{search}%"
                     params.extend([term, term])
-                sql += " GROUP BY v.id_venta ORDER BY v.fecha_venta DESC"
+                
+                sql += " GROUP BY v.id_venta, v.total, v.fecha_venta, v.id_cliente, c.nombre ORDER BY v.fecha_venta DESC"
+                
                 cursor.execute(sql, params)
                 return cursor.fetchall()
         finally:
