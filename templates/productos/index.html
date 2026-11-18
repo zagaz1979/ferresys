@@ -8,6 +8,23 @@
         <a href="{{ url_for('productos.crear') }}" class="btn btn-primary">+ Nuevo Producto</a>
     </div>
 
+    <div class="toolbar">
+        <!-- Buscador con Debounce -->
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Buscar por nombre, código o categoría..." value="{{ search }}">
+        </div>
+        
+        <!-- Botones de Exportación e Impresión -->
+        <div class="toolbar-actions">
+            <a href="{{ url_for('productos.exportar_excel', search=search) }}" class="btn btn-success">
+                📊 Exportar a Excel
+            </a>
+            <button onclick="window.print()" class="btn btn-secondary">
+                🖨️ Imprimir
+            </button>
+        </div>
+    </div>
+
     <table>
         <thead>
             <tr>
@@ -17,11 +34,11 @@
                 <th>P. Compra</th>
                 <th>P. Venta</th>
                 <th>Stock</th>
-                <th>Acciones</th>
+                <th class="acciones">Acciones</th>
             </tr>
         </thead>
         <tbody>
-            {% for p in productos %}
+            {% for p in paginacion.data %}
             <tr>
                 <td>{{ p.codigo_barras }}</td>
                 <td>{{ p.nombre }}</td>
@@ -41,8 +58,51 @@
                 </td>
             </tr>
             {% else %}
-            <tr><td colspan="7" class="vacio">No hay productos registrados.</td></tr>
+            <tr><td colspan="7" class="vacio">No se encontraron productos.</td></tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Paginación -->
+    {% if paginacion.pages > 1 %}
+    <div class="pagination">
+        {% if paginacion.page > 1 %}
+            <a href="{{ url_for('productos.index', page=paginacion.page-1, search=search) }}">&laquo; Anterior</a>
+        {% else %}
+            <span class="disabled">&laquo; Anterior</span>
+        {% endif %}
+
+        {% for p in paginacion.get_page_numbers() %}
+            {% if p == paginacion.page %}
+                <span class="active">{{ p }}</span>
+            {% else %}
+                <a href="{{ url_for('productos.index', page=p, search=search) }}">{{ p }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if paginacion.page < paginacion.pages %}
+            <a href="{{ url_for('productos.index', page=paginacion.page+1, search=search) }}">Siguiente &raquo;</a>
+        {% else %}
+            <span class="disabled">Siguiente &raquo;</span>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Script de búsqueda en vivo -->
+    <script>
+        let timer;
+        document.getElementById('search-input').addEventListener('input', function() {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                const url = new URL(window.location.href);
+                if (this.value) {
+                    url.searchParams.set('search', this.value);
+                } else {
+                    url.searchParams.delete('search');
+                }
+                url.searchParams.set('page', '1'); // Resetear a página 1 al buscar
+                window.location.href = url.toString();
+            }, 500); // 500ms de espera
+        });
+    </script>
 {% endblock %}

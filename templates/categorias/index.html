@@ -7,12 +7,33 @@
         <h1>Categorías</h1>
         <a href="{{ url_for('categorias.crear') }}" class="btn btn-primary">+ Nueva Categoría</a>
     </div>
+
+    <div class="toolbar">
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Buscar por nombre o descripción..." value="{{ search }}">
+        </div>
+        
+        <div class="toolbar-actions">
+            <a href="{{ url_for('categorias.exportar_excel', search=search) }}" class="btn btn-success">
+                📊 Exportar a Excel
+            </a>
+            <button onclick="window.print()" class="btn btn-secondary">
+                🖨️ Imprimir
+            </button>
+        </div>
+    </div>
+
     <table>
         <thead>
-            <tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Acciones</th></tr>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th class="acciones">Acciones</th>
+            </tr>
         </thead>
         <tbody>
-            {% for c in categorias %}
+            {% for c in paginacion.data %}
             <tr>
                 <td>{{ c.id_categoria }}</td>
                 <td>{{ c.nombre }}</td>
@@ -27,8 +48,49 @@
                 </td>
             </tr>
             {% else %}
-            <tr><td colspan="4" class="vacio">No hay categorías registradas.</td></tr>
+            <tr><td colspan="4" class="vacio">No se encontraron categorías.</td></tr>
             {% endfor %}
         </tbody>
     </table>
+
+    {% if paginacion.pages > 1 %}
+    <div class="pagination">
+        {% if paginacion.page > 1 %}
+            <a href="{{ url_for('categorias.index', page=paginacion.page-1, search=search) }}">&laquo; Anterior</a>
+        {% else %}
+            <span class="disabled">&laquo; Anterior</span>
+        {% endif %}
+
+        {% for p in paginacion.get_page_numbers() %}
+            {% if p == paginacion.page %}
+                <span class="active">{{ p }}</span>
+            {% else %}
+                <a href="{{ url_for('categorias.index', page=p, search=search) }}">{{ p }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if paginacion.page < paginacion.pages %}
+            <a href="{{ url_for('categorias.index', page=paginacion.page+1, search=search) }}">Siguiente &raquo;</a>
+        {% else %}
+            <span class="disabled">Siguiente &raquo;</span>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <script>
+        let timer;
+        document.getElementById('search-input').addEventListener('input', function() {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                const url = new URL(window.location.href);
+                if (this.value) {
+                    url.searchParams.set('search', this.value);
+                } else {
+                    url.searchParams.delete('search');
+                }
+                url.searchParams.set('page', '1');
+                window.location.href = url.toString();
+            }, 500);
+        });
+    </script>
 {% endblock %}
