@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Panel Principal{% endblock %}
+
+{% block content %}
+    <h1>Panel Principal</h1>
+    <p>Bienvenido a <strong>FerreSys</strong>, el sistema de gestión de inventario y ventas para tu ferretería.</p>
+
+    <div class="cards">
+        <a class="card" href="{{ url_for('productos.index') }}">
+            <h3>Productos</h3>
+            <p>Administra el inventario de tu ferretería.</p>
+        </a>
+        <a class="card" href="{{ url_for('categorias.index') }}">
+            <h3>Categorías</h3>
+            <p>Organiza los productos por tipo.</p>
+        </a>
+        <a class="card" href="{{ url_for('clientes.index') }}">
+            <h3>Clientes</h3>
+            <p>Registra y gestiona tus clientes.</p>
+        </a>
+        <a class="card" href="{{ url_for('ventas.index') }}">
+            <h3>Ventas</h3>
+            <p>Registra ventas y consulta el historial.</p>
+        </a>
+    </div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Producto{% endblock %}
+
+{% block content %}
+    <h1>Editar Producto</h1>
+    <form method="POST" class="form">
+        <label>Código de Barras
+            <input type="text" name="codigo_barras" value="{{ producto.codigo_barras }}" required maxlength="30">
+        </label>
+        <label>Nombre
+            <input type="text" name="nombre" value="{{ producto.nombre }}" required maxlength="100">
+        </label>
+        <div class="form-row">
+            <label>Precio Compra
+                <input type="number" step="0.01" min="0" name="precio_compra" value="{{ producto.precio_compra }}" required>
+            </label>
+            <label>Precio Venta
+                <input type="number" step="0.01" min="0" name="precio_venta" value="{{ producto.precio_venta }}" required>
+            </label>
+        </div>
+        <div class="form-row">
+            <label>Stock
+                <input type="number" min="0" name="stock" value="{{ producto.stock }}" required>
+            </label>
+            <label>Stock Mínimo
+                <input type="number" min="0" name="stock_minimo" value="{{ producto.stock_minimo }}" required>
+            </label>
+        </div>
+        <label>Categoría
+            <select name="id_categoria">
+                <option value="">— Sin categoría —</option>
+                {% for c in categorias %}
+                <option value="{{ c.id_categoria }}"
+                    {% if producto.id_categoria == c.id_categoria %}selected{% endif %}>
+                    {{ c.nombre }}
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Actualizar</button>
+            <a href="{{ url_for('productos.index') }}" class="btn">Cancelar</a>
+        </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Nuevo Cliente{% endblock %}
+
+{% block content %}
+    <h1>Nuevo Cliente</h1>
+    <form method="POST" class="form">
+        <label>Nombre
+            <input type="text" name="nombre" required maxlength="100">
+        </label>
+        <div class="form-row">
+            <label>Teléfono
+                <input type="text" name="telefono" maxlength="20">
+            </label>
+            <label>Email
+                <input type="email" name="email" maxlength="100">
+            </label>
+        </div>
+        <label>Dirección
+            <input type="text" name="direccion" maxlength="150">
+        </label>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <a href="{{ url_for('clientes.index') }}" class="btn">Cancelar</a>
+        </div>
+    </form>
+{% endblock %}

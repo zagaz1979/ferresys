@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Venta #{{ venta.id_venta }}{% endblock %}
+
+{% block content %}
+    <h1>Venta #{{ venta.id_venta }}</h1>
+    <p><strong>Fecha:</strong> {{ venta.fecha_venta }}</p>
+    <p><strong>Cliente:</strong> {{ venta.cliente or 'Cliente genérico' }}</p>
+
+    <table>
+        <thead>
+            <tr><th>Producto</th><th>Código</th><th>Cantidad</th><th>Precio Unit.</th><th>Subtotal</th></tr>
+        </thead>
+        <tbody>
+            {% for d in venta.detalles %}
+            <tr>
+                <td>{{ d.producto }}</td>
+                <td>{{ d.codigo_barras }}</td>
+                <td>{{ d.cantidad }}</td>
+                <td>${{ "%.2f"|format(d.precio_unitario) }}</td>
+                <td>${{ "%.2f"|format(d.subtotal) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4" style="text-align:right"><strong>Total:</strong></td>
+                <td><strong>${{ "%.2f"|format(venta.total) }}</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <a href="{{ url_for('ventas.index') }}" class="btn">← Volver al historial</a>
+{% endblock %}

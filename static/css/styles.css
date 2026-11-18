@@ -1,0 +1,150 @@
+* { box-sizing: border-box; }
+
+body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    margin: 0;
+    background: #f4f6f8;
+    color: #2c3e50;
+    line-height: 1.5;
+}
+
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.topbar {
+    background: #1e293b;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.topbar .brand a { color: #fff; font-weight: bold; font-size: 1.25rem; }
+.topbar nav a {
+    color: #cbd5e1;
+    margin-left: 1rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+.topbar nav a:hover { background: #334155; color: #fff; text-decoration: none; }
+
+.container {
+    max-width: 1100px;
+    margin: 1.5rem auto;
+    padding: 0 1rem;
+}
+
+.footer {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.85rem;
+    padding: 1.5rem 0;
+}
+
+h1 { font-size: 1.75rem; margin-bottom: 1rem; }
+h3 { margin: 0.5rem 0; }
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+th, td {
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+th { background: #f1f5f9; font-weight: 600; }
+tr:hover td { background: #f8fafc; }
+.vacio { text-align: center; color: #64748b; padding: 1.5rem; }
+
+.stock-bajo {
+    background: #fee2e2;
+    color: #991b1b;
+    font-weight: bold;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid #cbd5e1;
+    background: #fff;
+    color: #2c3e50;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.btn:hover { background: #f1f5f9; text-decoration: none; }
+.btn-sm { padding: 0.25rem 0.55rem; font-size: 0.8rem; }
+.btn-primary { background: #2563eb; color: #fff; border-color: #2563eb; }
+.btn-primary:hover { background: #1d4ed8; }
+.btn-danger { background: #dc2626; color: #fff; border-color: #dc2626; }
+.btn-danger:hover { background: #b91c1c; }
+
+.acciones { white-space: nowrap; }
+.acciones form { display: inline; }
+
+.alert {
+    padding: 0.7rem 1rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    border-left: 4px solid;
+}
+.alert-success { background: #dcfce7; color: #166534; border-color: #22c55e; }
+.alert-danger  { background: #fee2e2; color: #991b1b; border-color: #ef4444; }
+.alert-warning { background: #fef3c7; color: #92400e; border-color: #f59e0b; }
+
+/* Formularios */
+.form { background: #fff; padding: 1.5rem; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); max-width: 720px; }
+.form label { display: block; margin-bottom: 0.9rem; font-weight: 500; }
+.form input, .form select {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    margin-top: 0.3rem;
+    font-size: 0.95rem;
+}
+.form input:focus, .form select:focus { outline: 2px solid #93c5fd; border-color: #2563eb; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-actions { margin-top: 1rem; display: flex; gap: 0.5rem; }
+
+/* Panel principal */
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+.card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    border-left: 4px solid #2563eb;
+    color: #2c3e50;
+    display: block;
+}
+.card:hover { transform: translateY(-2px); transition: transform 0.15s; text-decoration: none; }
+.card h3 { color: #1e293b; }
+.card p { color: #64748b; margin: 0.5rem 0 0; }
+
+/* Tabla de venta */
+.tabla-venta select, .tabla-venta input {
+    padding: 0.35rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+.tabla-venta .inp-cantidad { width: 80px; }
+.precio-unit, .subtotal { text-align: right; }
+#total-venta { font-size: 1.1rem; }

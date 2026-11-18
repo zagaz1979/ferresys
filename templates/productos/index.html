@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Productos{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Inventario de Productos</h1>
+        <a href="{{ url_for('productos.crear') }}" class="btn btn-primary">+ Nuevo Producto</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>P. Compra</th>
+                <th>P. Venta</th>
+                <th>Stock</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in productos %}
+            <tr>
+                <td>{{ p.codigo_barras }}</td>
+                <td>{{ p.nombre }}</td>
+                <td>{{ p.categoria or '—' }}</td>
+                <td>${{ "%.2f"|format(p.precio_compra) }}</td>
+                <td>${{ "%.2f"|format(p.precio_venta) }}</td>
+                <td class="{% if p.stock <= p.stock_minimo %}stock-bajo{% endif %}">
+                    {{ p.stock }}
+                </td>
+                <td class="acciones">
+                    <a href="{{ url_for('productos.editar', id=p.id_producto) }}" class="btn btn-sm">Editar</a>
+                    <form action="{{ url_for('productos.eliminar', id=p.id_producto) }}"
+                        method="POST" style="display:inline"
+                        onsubmit="return confirm('¿Eliminar este producto?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" class="vacio">No hay productos registrados.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

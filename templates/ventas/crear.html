@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Nueva Venta{% endblock %}
+
+{% block content %}
+    <h1>Registrar Venta</h1>
+    <form method="POST" id="venta-form" class="form">
+        <label>Cliente (opcional)
+            <select name="id_cliente">
+                <option value="">— Cliente genérico —</option>
+                {% for c in clientes %}
+                <option value="{{ c.id_cliente }}">{{ c.nombre }}</option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <h3>Productos</h3>
+        <table class="tabla-venta">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unit.</th>
+                    <th>Subtotal</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="lineas">
+                <tr class="linea">
+                    <td>
+                        <select name="id_producto[]" class="sel-producto" required>
+                            <option value="">— Seleccione —</option>
+                            {% for p in productos %}
+                            <option value="{{ p.id_producto }}"
+                                    data-precio="{{ p.precio_venta }}"
+                                    data-stock="{{ p.stock }}">
+                                {{ p.nombre }} (Stock: {{ p.stock }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td><input type="number" name="cantidad[]" class="inp-cantidad" value="1" min="1" required></td>
+                    <td class="precio-unit">$0.00</td>
+                    <td class="subtotal">$0.00</td>
+                    <td><button type="button" class="btn btn-danger btn-sm btn-quitar">✕</button></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="text-align:right"><strong>Total:</strong></td>
+                    <td id="total-venta"><strong>$0.00</strong></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <button type="button" id="btn-agregar-linea" class="btn">+ Agregar producto</button>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Registrar Venta</button>
+            <a href="{{ url_for('ventas.index') }}" class="btn">Cancelar</a>
+        </div>
+    </form>
+
+    <script>
+        window.FERRESYS_VENTAS = true;
+    </script>
+{% endblock %}

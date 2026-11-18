@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Ventas{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Historial de Ventas</h1>
+        <a href="{{ url_for('ventas.crear') }}" class="btn btn-primary">+ Nueva Venta</a>
+    </div>
+    <table>
+        <thead>
+            <tr><th>#</th><th>Fecha</th><th>Cliente</th><th>Total</th><th>Items</th><th>Acciones</th></tr>
+        </thead>
+        <tbody>
+            {% for v in ventas %}
+            <tr>
+                <td>{{ v.id_venta }}</td>
+                <td>{{ v.fecha_venta }}</td>
+                <td>{{ v.cliente or '—' }}</td>
+                <td>${{ "%.2f"|format(v.total) }}</td>
+                <td>{{ v['items'] }}</td>
+                <td class="acciones">
+                    <a href="{{ url_for('ventas.detalle', id=v.id_venta) }}" class="btn btn-sm">Ver detalle</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6" class="vacio">No hay ventas registradas.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

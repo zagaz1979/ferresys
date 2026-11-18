@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Categorías{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Categorías</h1>
+        <a href="{{ url_for('categorias.crear') }}" class="btn btn-primary">+ Nueva Categoría</a>
+    </div>
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Nombre</th><th>Descripción</th><th>Acciones</th></tr>
+        </thead>
+        <tbody>
+            {% for c in categorias %}
+            <tr>
+                <td>{{ c.id_categoria }}</td>
+                <td>{{ c.nombre }}</td>
+                <td>{{ c.descripcion or '—' }}</td>
+                <td class="acciones">
+                    <a href="{{ url_for('categorias.editar', id=c.id_categoria) }}" class="btn btn-sm">Editar</a>
+                    <form action="{{ url_for('categorias.eliminar', id=c.id_categoria) }}"
+                        method="POST" style="display:inline"
+                        onsubmit="return confirm('¿Eliminar categoría?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" class="vacio">No hay categorías registradas.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
