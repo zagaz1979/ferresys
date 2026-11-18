@@ -17,10 +17,13 @@ def get_db_connection():
     """Retorna una nueva conexión a MySQL con cursor tipo diccionario."""
     return pymysql.connect(
         host=Config.MYSQL_HOST,
+        port=Config.MYSQL_PORT,
         user=Config.MYSQL_USER,
         password=Config.MYSQL_PASSWORD,
         database=Config.MYSQL_DB,
-        port=Config.MYSQL_PORT,
+        #ssl_verify_cert = True,
+        #ssl_verify_identity = True,
+        #ssl_ca = "<CA_PATH>",
         cursorclass=pymysql.cursors.DictCursor,
         autocommit=False,
     )
