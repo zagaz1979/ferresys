@@ -62,21 +62,23 @@ class VentaModel:
             conn.close()
 
     @staticmethod
-    def get_all():
+    def get_all(search=None):
         conn = get_db_connection()
         try:
             with conn.cursor() as cursor:
-                cursor.execute(
-                    """
-                    SELECT v.*, c.nombre AS cliente,
-                           COUNT(dv.id_detalle) AS items
+                sql = """
+                    SELECT v.*, c.nombre AS cliente, COUNT(dv.id_detalle) AS num_items
                     FROM ventas v
                     LEFT JOIN clientes c ON v.id_cliente = c.id_cliente
                     LEFT JOIN detalle_ventas dv ON v.id_venta = dv.id_venta
-                    GROUP BY v.id_venta
-                    ORDER BY v.fecha_venta DESC
-                    """
-                )
+                """
+                params = []
+                if search:
+                    sql += " WHERE c.nombre LIKE %s OR CAST(v.id_venta AS CHAR) LIKE %s"
+                    term = f"%{search}%"
+                    params.extend([term, term])
+                sql += " GROUP BY v.id_venta ORDER BY v.fecha_venta DESC"
+                cursor.execute(sql, params)
                 return cursor.fetchall()
         finally:
             conn.close()

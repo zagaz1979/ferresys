@@ -1,13 +1,38 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+import io
+import pandas as pd
+from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file
 from models.categoria_model import CategoriaModel
+from utils.paginator import Paginator
+
 
 categoria_bp = Blueprint("categorias", __name__)
 
 
 @categoria_bp.route("/categorias")
 def index():
-    categorias = CategoriaModel.get_all()
-    return render_template("categorias/index.html", categorias=categorias)
+    search = request.args.get("search", "").strip()
+    page = int(request.args.get("page", 1))
+    
+    todos = CategoriaModel.get_all(search=search)
+    paginacion = Paginator(todos, page=page, per_page=10)
+    return render_template("categorias/index.html", paginacion=paginacion, search=search)
+
+
+@categoria_bp.route("/categorias/exportar")
+def exportar_excel():
+    search = request.args.get("search", "").strip()
+    categorias = CategoriaModel.get_all(search=search)
+    
+    df = pd.DataFrame(categorias)
+    df = df[['id_categoria', 'nombre', 'descripcion']]
+    df.columns = ['ID', 'Nombre', 'Descripción']
+
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Categorias')
+    output.seek(0)
+
+    return send_file(output, download_name='categorias.xlsx', as_attachment=True)
 
 
 @categoria_bp.route("/categorias/crear", methods=["GET", "POST"])

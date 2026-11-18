@@ -4,11 +4,18 @@ from config import get_db_connection
 class ClienteModel:
 
     @staticmethod
-    def get_all():
+    def get_all(search=None):
         conn = get_db_connection()
         try:
             with conn.cursor() as cursor:
-                cursor.execute("SELECT * FROM clientes ORDER BY nombre ASC")
+                sql = "SELECT * FROM clientes"
+                params = []
+                if search:
+                    sql += " WHERE nombre LIKE %s OR telefono LIKE %s OR email LIKE %s"
+                    term = f"%{search}%"
+                    params.extend([term, term, term])
+                sql += " ORDER BY nombre ASC"
+                cursor.execute(sql, params)
                 return cursor.fetchall()
         finally:
             conn.close()

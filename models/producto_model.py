@@ -4,18 +4,23 @@ from config import get_db_connection
 class ProductoModel:
 
     @staticmethod
-    def get_all():
+    def get_all(search=None):
         conn = get_db_connection()
         try:
             with conn.cursor() as cursor:
-                cursor.execute(
-                    """
+                sql = """
                     SELECT p.*, c.nombre AS categoria
                     FROM productos p
                     LEFT JOIN categorias c ON p.id_categoria = c.id_categoria
-                    ORDER BY p.nombre ASC
-                    """
-                )
+                """
+                params = []
+                if search:
+                    sql += " WHERE p.nombre LIKE %s OR p.codigo_barras LIKE %s OR c.nombre LIKE %s"
+                    term = f"%{search}%"
+                    params.extend([term, term, term])
+                
+                sql += " ORDER BY p.nombre ASC"
+                cursor.execute(sql, params)
                 return cursor.fetchall()
         finally:
             conn.close()

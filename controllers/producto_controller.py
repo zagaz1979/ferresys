@@ -1,6 +1,10 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+import io
+import pandas as pd
+from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file
 from models.producto_model import ProductoModel
 from models.categoria_model import CategoriaModel
+from utils.paginator import Paginator
+
 
 producto_bp = Blueprint("productos", __name__)
 
@@ -31,8 +35,37 @@ def _parse_producto_form():
 
 @producto_bp.route("/productos")
 def index():
-    productos = ProductoModel.get_all()
-    return render_template("productos/index.html", productos=productos)
+    search = request.args.get("search", "").strip()
+    page = int(request.args.get("page", 1))
+    
+    todos = ProductoModel.get_all(search=search)
+    paginacion = Paginator(todos, page=page, per_page=10) # 10 por página
+    
+    return render_template("productos/index.html", paginacion=paginacion, search=search)
+
+
+@producto_bp.route("/productos/exportar")
+def exportar_excel():
+    search = request.args.get("search", "").strip()
+    productos = ProductoModel.get_all(search=search)
+    
+    if not productos:
+        flash("No hay datos para exportar.", "warning")
+        return redirect(url_for("productos.index"))
+
+    # Crear DataFrame
+    df = pd.DataFrame(productos)
+    # Seleccionar y renombrar columnas
+    df = df[['codigo_barras', 'nombre', 'categoria', 'precio_compra', 'precio_venta', 'stock']]
+    df.columns = ['Código', 'Nombre', 'Categoría', 'P. Compra', 'P. Venta', 'Stock']
+
+    # Guardar en memoria
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Productos')
+    output.seek(0)
+
+    return send_file(output, download_name='productos.xlsx', as_attachment=True)
 
 
 @producto_bp.route("/productos/crear", methods=["GET", "POST"])

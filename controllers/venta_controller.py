@@ -1,15 +1,40 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+import io
+import pandas as pd
+from flask import Blueprint, render_template, request, redirect, url_for, flash, send_file
 from models.venta_model import VentaModel
 from models.producto_model import ProductoModel
 from models.cliente_model import ClienteModel
+from utils.paginator import Paginator
+
 
 venta_bp = Blueprint("ventas", __name__)
 
 
 @venta_bp.route("/ventas")
 def index():
-    ventas = VentaModel.get_all()
-    return render_template("ventas/index.html", ventas=ventas)
+    search = request.args.get("search", "").strip()
+    page = int(request.args.get("page", 1))
+    
+    todas = VentaModel.get_all(search=search)
+    paginacion = Paginator(todas, page=page, per_page=10)
+    return render_template("ventas/index.html", paginacion=paginacion, search=search)
+
+
+@venta_bp.route("/ventas/exportar")
+def exportar_excel():
+    search = request.args.get("search", "").strip()
+    ventas = VentaModel.get_all(search=search)
+    
+    df = pd.DataFrame(ventas)
+    df = df[['id_venta', 'fecha_venta', 'cliente', 'total', 'num_items']]
+    df.columns = ['N° Venta', 'Fecha', 'Cliente', 'Total', 'Items']
+
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Ventas')
+    output.seek(0)
+
+    return send_file(output, download_name='ventas.xlsx', as_attachment=True)
 
 
 @venta_bp.route("/ventas/crear", methods=["GET", "POST"])
